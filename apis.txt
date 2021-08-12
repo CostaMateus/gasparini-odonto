@@ -1,0 +1,23 @@
+1) Todas as chamadas da api.personal-ed.com.br
+
+2) RPCGetHorariosLivres
+   dt_data_ini -> date (data inicial)
+   dt_data_fim -> date (data final)
+   nprest      -> int  (ID do dentista)
+   nunid       -> int  (ID da unidade - sempre "1")
+
+3) RPCCreateAgenda
+   dt_data  -> date         (data do agendamento)
+   shorario -> varchar(5)   (horário do agendamento formato "HH:MM"
+   nprest   -> int          (ID do dentista)
+   nunid    -> int          (ID da unidade - sempre "1")
+   nropac   -> int          (ID do paciente, ou código "0" caso não)
+   snome    -> varchar(100) (Nome completo do paciente)
+   ntpfone1 -> int          (tipo do telefone 1 - mesmo da ficha online)
+   sfone1   -> varchar(100) (número do telefone 1)
+   ntpfone2 -> int          (tipo do telefone 2 - mesmo da ficha online)
+   sfone2   -> varchar(100) (número do telefone 2)
+   smotivo  -> varchar(255) (motivo da consulta
+
+   OBS: os telefones se for de um paciente cadastrado enviar os mesmos dados carregados da ficha
+   OBS: o mesmo vale para o nome do paciente se for cadastrado, trazer o nome da ficha
