@@ -13,11 +13,11 @@
    nunid    -> int          (ID da unidade - sempre "1")
    nropac   -> int          (ID do paciente, ou código "0" caso não)
    snome    -> varchar(100) (Nome completo do paciente)
-   ntpfone1 -> int          (tipo do telefone 1 - mesmo da ficha online)
+   ntpfone1 -> int          (tipo do telefone 1 - mesmo da ficha online)  // 4 celular
    sfone1   -> varchar(100) (número do telefone 1)
    ntpfone2 -> int          (tipo do telefone 2 - mesmo da ficha online)
    sfone2   -> varchar(100) (número do telefone 2)
-   smotivo  -> varchar(255) (motivo da consulta
+   smotivo  -> varchar(255) (motivo da consulta)
 
    OBS: os telefones se for de um paciente cadastrado enviar os mesmos dados carregados da ficha
    OBS: o mesmo vale para o nome do paciente se for cadastrado, trazer o nome da ficha

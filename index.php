@@ -2,6 +2,11 @@
 
 date_default_timezone_set("America/Sao_Paulo");
 
+const NPREST   = 277; // 277 mateus; 1 gasparini
+const NUNID    = 1;
+const NROPAC   = 0;
+const NTPFONE1 = 4;
+
 const URL   = "https://api.personal-ed.com.br";
 const CODE  = "gasparini";
 const HOURS = [ "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00" ];
@@ -33,10 +38,10 @@ function getScheduleGasparini()
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_HTTPHEADER     => [ "Content-type: application/json" ],
         CURLOPT_POSTFIELDS     => json_encode([
-            "dt_data_ini" => date("Y-m-d"), // "2021-07-30", //
+            "dt_data_ini" => date("Y-m-d"),
             "dt_data_fim" => date("Y-m-d", strtotime(date("Y-m-d") . " +16 days")),
-            "nprest"      => 1,
-            "nunid"       => 1
+            "nprest"      => NPREST,
+            "nunid"       => NUNID
         ])
     ));
 
@@ -161,6 +166,12 @@ function treatValidSchedule($schedules)
     return $temp;
 }
 
+/**
+ * Retorna qual o dia da semana
+ *
+ * @param string $date
+ * @return string
+ */
 function getDayOfWeek($date)
 {
     $day = date("l", strtotime($date));
@@ -190,12 +201,26 @@ function getDayOfWeek($date)
     }
 }
 
+/**
+ * Transforma data e hora em um id unico
+ *
+ * @param string $date
+ * @param string $hour
+ * @return string
+ */
 function getId($date, $hour)
 {
     $hour = explode(":", $hour);
     return str_replace("/", "_", $date) . "_" . $hour[0];
 }
 
+/**
+ * Verifica se a data é hoje ou amanhã
+ *
+ * @param string $date
+ * @param string $dayWeek
+ * @return string
+ */
 function isTodayTomorrow($date, $dayWeek)
 {
     if ($date == date("Y-m-d"))
@@ -210,7 +235,7 @@ function isTodayTomorrow($date, $dayWeek)
  * Formata data de MM-DD para DD/MM
  *
  * @param string $date
- * @return string $date
+ * @return string
  */
 function formatDate($date)
 {
@@ -218,6 +243,12 @@ function formatDate($date)
     return $date[2] . "/" . $date[1] . "/" . $date[0];
 }
 
+/**
+ * Remove o ano da data
+ *
+ * @param string $date
+ * @return string
+ */
 function onlyDayMonth($date)
 {
     $date = explode("/", $date);
