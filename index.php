@@ -1,11 +1,15 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+
 date_default_timezone_set("America/Sao_Paulo");
 
 const NPREST   = 277; // 277 mateus; 1 gasparini
-const NUNID    = 1;
-const NROPAC   = 0;
-const NTPFONE1 = 4;
+const NUNID    = 1;   // sempre 1
+const NROPAC   = 0;   // novo paciente
+const NTPFONE1 = 4;   // tipo celular
 
 const URL   = "https://api.personal-ed.com.br";
 const CODE  = "gasparini";
@@ -239,8 +243,7 @@ function isTodayTomorrow($date, $dayWeek)
  */
 function formatDate($date)
 {
-    $date = explode("-", $date);
-    return $date[2] . "/" . $date[1] . "/" . $date[0];
+    return implode("/", array_reverse(explode("-", $date)));
 }
 
 /**
@@ -337,15 +340,15 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
                         <div class="col-12 col-md-8 mx-auto">
                             <div class="my-3">
                                 <label for="name" class="form-label">Nome *</label>
-                                <input type="text" class="form-control" id="name" placeholder="Digite seu nome" required autofocus >
+                                <input type="text" class="form-control"  id="name"  name="name"  placeholder="Digite seu nome"   required autofocus >
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">E-mail *</label>
-                                <input type="email" class="form-control" id="email" placeholder="Digite seu e-mail" required >
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail" required >
                             </div>
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Telefone *</label>
-                                <input type="phone" class="form-control" id="phone" placeholder="(11) 91234-5678" required >
+                                <input type="phone" class="form-control" id="phone" name="phone" placeholder="(11) 91234-5678"   required >
                             </div>
                             <div class="col-auto mb-3">
                                 <span class="form-text">
@@ -497,6 +500,9 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
                 <div class="modal-body">
                     <div class="mx-auto my-5 spin-load"></div>
                 </div>
+                <div class="modal-footer text-center d-none">
+                    <button type="button" class="btn btn-secondary" >Fechar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -512,8 +518,15 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
         }, spOptions = { onKeyPress: function(val, e, field, options) { field.mask(SPMaskBehavior.apply({}, arguments), options); } };
         $("#phone").mask(SPMaskBehavior, spOptions);
 
+        const URL      = "<?= URL      ?>";
+        const CODE     = "<?= CODE     ?>";
+        const NPREST   =  <?= NPREST   ?>;
+        const NUNID    =  <?= NUNID    ?>;
+        const NROPAC   =  <?= NROPAC   ?>;
+        const NTPFONE1 =  <?= NTPFONE1 ?>;
 
         $(document).ready(function() {
+            let myModal = new bootstrap.Modal(document.getElementById("modalEnd"), { keyboard: false, backdrop: "static" });
 
             $("input[name=hour]").change( function() {
                 $("#btnSubmit").prop("disabled", false);
@@ -522,44 +535,87 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
             $("#formGasparini").on("submit", function(e) {
                 e.preventDefault();
 
-                $("#error_hour").addClass("d-none");
-
-                var name  = $("#name").val();
-                var email = $("#email").val();
-                var phone = $("#phone").val();
-                var hour  = $("input[name=hour]:checked", "#formGasparini").val();
-
-                if (!hour) $("#error_hour").removeClass("d-none");
-
-                var treatHour = hour.split("_");
-
-                // $.ajax();
-
-                var text = `
-                    <h5>Muito bem!</h5>
-                    <p>Sua consulta foi marcada para o dia <b>${treatHour[0]}/${treatHour[1]}/${treatHour[2]}</b> às <b>${treatHour[3]}h</b>.</p>
-                    <p>A confirmação será pela e-mail (<b>${email}</b>) ou pelo telefone (<b>${phone}</b>).</p>
-                `;
-
-                var myModal = new bootstrap.Modal(document.getElementById("modalEnd"), {
-                    keyboard: false,
-                    keyboard: false,
-                    backdrop: "static"
-                });
-
                 myModal.show();
 
-                setTimeout( function () {
-                    $("#modalEnd .modal-header h5").addClass("text-success");
-                    $("#modalEnd .modal-title").html("Consulta marcada!");
-                    $("#modalEnd .modal-body").html(text);
-                }, 3000);
+                $("#error_hour").addClass("d-none");
 
-                setTimeout( function () {
+                const name   = $("#name").val();
+                const email  = $("#email").val();
+                const phone  = $("#phone").val();
+
+                let datetime = $("input[name=hour]:checked", "#formGasparini").val();
+
+                if (!datetime)
+                {
+                    $("#error_hour").removeClass("d-none");
                     myModal.hide();
-                    // window.location.reload();
-                }, 15000);
+                    return;
+                }
 
+                datetime   = datetime.split("_");
+
+                const date = `${datetime[2]}-${datetime[1]}-${datetime[0]}`;
+                const hour = `${datetime[3]}:00`;
+
+                let title  = "";
+                let text   = "";
+                let type   = "";
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    url: `${URL}/${CODE}/RPCCreateAgenda`,
+                    data: JSON.stringify({
+                        "nprest"   : NPREST,
+                        "nunid"    : NUNID,
+                        "nropac"   : NROPAC,
+                        "ntpfone1" : NTPFONE1,
+                        "dt_data"  : date,
+                        "shorario" : hour,
+                        "snome"    : name,
+                        "sfone1"   : phone,
+                        "smotivo"  : email
+                    }),
+                    success: function ( data ) {
+                        if (data["dados"]["ret"]["VL"] == 0)
+                        {
+                            type  = "text-danger";
+                            title = "Algo de errado!";
+                            text  = "<h5>Ocorreu erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
+                        }
+                        else
+                        {
+                            type  = "text-success";
+                            title = "Consulta marcada!";
+                            text  = `
+                                <h5>Muito bem!</h5>
+                                <p><b>${name.split(" ")[0]}</b>, sua consulta foi marcada para o dia <b>${datetime[0]}/${datetime[1]}/${datetime[2]}</b> às <b>${datetime[3]}h</b>.</p>
+                                <p class="mb-0" >A confirmação será pelo e-mail (<b>${email}</b>) ou pelo telefone (<b>${phone}</b>).</p>
+                            `;
+                        }
+                        console.log( "sucess", data["dados"]["ret"]["VL"] );
+                    },
+                    error: function ( err ) {
+                        console.log( err );
+                        type  = "text-danger";
+                        title = "Algo de errado!";
+                        text  = "<h5>Ocorreu erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
+                    }
+                });
+
+                setTimeout( function () {
+                    $("#modalEnd .modal-footer").removeClass("d-none");
+                    $("#modalEnd .modal-header h5").addClass(type);
+                    $("#modalEnd .modal-title").html(title);
+                    $("#modalEnd .modal-body").html(text);
+                }, 2000);
+
+            });
+
+            $("#modalEnd button").on("click", function(e) {
+                myModal.hide();
+                window.location.reload();
             });
 
         });
