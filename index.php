@@ -366,7 +366,9 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
                     ?>
                             <div id="div-error" class="row">
                                 <div class="col-12">
-                                    <h3>Ocorreu um erro!</h3>
+                                    <h4>Ocorreu um erro!</h4>
+                                    <p>Não foi possível carregar a agenda.</p>
+                                    <p>Atualize a página e tente novamente.</p>
                                 </div>
                             </div>
                     <?php
@@ -512,7 +514,7 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <Script>
+    <script>
         var SPMaskBehavior = function (val) {
             return val.replace(/\D/g, "").length === 11 ? "(00) 00000-0000" : "(00) 0000-00009";
         }, spOptions = { onKeyPress: function(val, e, field, options) { field.mask(SPMaskBehavior.apply({}, arguments), options); } };
@@ -582,7 +584,7 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
                         {
                             type  = "text-danger";
                             title = "Algo de errado!";
-                            text  = "<h5>Ocorreu erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
+                            text  = "<h5>Ocorreu um erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
                         }
                         else
                         {
@@ -600,7 +602,7 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
                         console.log( err );
                         type  = "text-danger";
                         title = "Algo de errado!";
-                        text  = "<h5>Ocorreu erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
+                        text  = "<h5>Ocorreu um erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
                     }
                 });
 
@@ -620,6 +622,6 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
 
         });
 
-    </Script>
+    </script>
 </body>
 </html>
