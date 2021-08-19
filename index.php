@@ -125,7 +125,8 @@
         $consultedDays = [];
         foreach (range(0,15,1) as $i)
         {
-            $date = date("Y-m-") . sprintf("%02d", date("d") + $i);
+            $today = date("Y-m-d");
+            $date  = date("Y-m-d", strtotime("$today +$i day"));
             $consultedDays[$date] = [];
         }
 
