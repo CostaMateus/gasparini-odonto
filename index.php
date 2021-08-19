@@ -1,274 +1,274 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: *");
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 
-date_default_timezone_set("America/Sao_Paulo");
+    date_default_timezone_set("America/Sao_Paulo");
 
-const NPREST   = 277; // 277 mateus; 1 gasparini
-const NUNID    = 1;   // sempre 1
-const NROPAC   = 0;   // novo paciente
-const NTPFONE1 = 4;   // tipo celular
+    const NPREST   = 277; // 277 mateus; 1 gasparini
+    const NUNID    = 1;   // sempre 1
+    const NROPAC   = 0;   // novo paciente
+    const NTPFONE1 = 4;   // tipo celular
 
-const URL   = "https://api.personal-ed.com.br";
-const CODE  = "gasparini";
-const HOURS = [ "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00" ];
+    const URL   = "https://api.personal-ed.com.br";
+    const CODE  = "gasparini";
+    const HOURS = [ "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00" ];
 
-/**
- * Recupera a agenda do Dr Gasparini
- *
- * @return array
- */
-function getScheduleGasparini()
-{
-    $ch = curl_init();
-
-    if (!$ch) return [
-        "code"     => "I-500",
-        "error"    => true,
-        "message"  => "Não foi possível se conectar ao serviço de agenda!",
-        "response" => ""
-    ];
-
-    curl_setopt_array( $ch, array(
-        CURLOPT_URL            => URL . "/" . CODE . "/RPCGetHorariosLivres",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING       => "",
-        CURLOPT_MAXREDIRS      => 10,
-        CURLOPT_TIMEOUT        => 60,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST  => "POST",
-        CURLOPT_HTTPHEADER     => [ "Content-type: application/json" ],
-        CURLOPT_POSTFIELDS     => json_encode([
-            "dt_data_ini" => date("Y-m-d"),
-            "dt_data_fim" => date("Y-m-d", strtotime(date("Y-m-d") . " +16 days")),
-            "nprest"      => NPREST,
-            "nunid"       => NUNID
-        ])
-    ));
-
-    $response = curl_exec($ch);
-
-    if (empty($response))
+    /**
+     * Recupera a agenda do Dr Gasparini
+     *
+     * @return array
+     */
+    function getScheduleGasparini()
     {
-        $code    = "E-500";
-        $error   = true;
-        $message = curl_error($ch);
-    }
-    else
-    {
-        $info = curl_getinfo($ch);
+        $ch = curl_init();
 
-        if (empty($info["http_code"]))
+        if (!$ch) return [
+            "code"     => "I-500",
+            "error"    => true,
+            "message"  => "Não foi possível se conectar ao serviço de agenda!",
+            "response" => ""
+        ];
+
+        curl_setopt_array( $ch, array(
+            CURLOPT_URL            => URL . "/" . CODE . "/RPCGetHorariosLivres",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 60,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => "POST",
+            CURLOPT_HTTPHEADER     => [ "Content-type: application/json" ],
+            CURLOPT_POSTFIELDS     => json_encode([
+                "dt_data_ini" => date("Y-m-d"),
+                "dt_data_fim" => date("Y-m-d", strtotime(date("Y-m-d") . " +16 days")),
+                "nprest"      => NPREST,
+                "nunid"       => NUNID
+            ])
+        ));
+
+        $response = curl_exec($ch);
+
+        if (empty($response))
         {
-            $code    = "NR-500";
+            $code    = "E-500";
             $error   = true;
-            $message = "No HTTP code was returned";
-        }
-        else if ($info["http_code"] >= 200 && $info["http_code"] <= 206)
-        {
-            $code    = $info["http_code"];
-            $error   = false;
-            $message = "Successful";
+            $message = curl_error($ch);
         }
         else
         {
-            $code    = $info["http_code"];
-            $error   = true;
-            $message = "Server return with error";
-        }
-    }
+            $info = curl_getinfo($ch);
 
-    curl_close( $ch );
-
-    if ($code < 200 || $code > 206)
-    {
-        return [
-            "code"     => $code,
-            "error"    => $error,
-            "message"  => $message,
-            "response" => ""
-        ];
-    }
-
-    $response = json_decode( $response, true );
-
-    if (isset($response["dados"]["ret"]["TX"]))
-    {
-        $message = "Agenda indisponível";
-        return [
-            "code"     => $code,
-            "error"    => $error,
-            "message"  => $message,
-            "response" => ""
-        ];
-    }
-
-    return [
-        "code"     => $code,
-        "error"    => $error,
-        "message"  => $message,
-        "response" => $response["dados"]["ret"]
-    ];
-}
-
-/**
- * Trata os horários recebidos da API
- *
- * @param array $schedules
- * @return array
- */
-function treatValidSchedule($schedules)
-{
-    $consultedDays = [];
-    foreach (range(0,15,1) as $i)
-    {
-        $date = date("Y-m-") . sprintf("%02d", date("d") + $i);
-        $consultedDays[$date] = [];
-    }
-
-    $temp = [];
-
-    foreach ($consultedDays as $id => $x)
-    {
-        foreach ($schedules as $sch)
-        {
-            $hour    = $sch["HORARIO"];
-
-            // Horarios de atendimento
-            if (!in_array($hour, HOURS)) continue;
-
-
-            $date    = formatDate($id);
-            $dayWeek = getDayOfWeek($id);
-            $day     = isTodayTomorrow($id, $dayWeek);
-
-            $temp[$date]["date"]    = $id;
-            $temp[$date]["day"]     = $day;
-            $temp[$date]["dayWeek"] = $dayWeek;
-
-
-            if ($id != $sch["DATA"])
+            if (empty($info["http_code"]))
             {
-                if (!isset($temp[$date]["hours"])) $temp[$date]["hours"] = [];
-
-                continue;
+                $code    = "NR-500";
+                $error   = true;
+                $message = "No HTTP code was returned";
             }
+            else if ($info["http_code"] >= 200 && $info["http_code"] <= 206)
+            {
+                $code    = $info["http_code"];
+                $error   = false;
+                $message = "Successful";
+            }
+            else
+            {
+                $code    = $info["http_code"];
+                $error   = true;
+                $message = "Server return with error";
+            }
+        }
 
-            // Na segunda, não atende pela manhã
-            if ($dayWeek == "Seg" && in_array($hour, ["09:00", "10:00", "11:00"])) continue;
+        curl_close( $ch );
 
-            // Ter/Qui/Sex todos horarios menos 17h
-            if ($dayWeek != "Seg" && $dayWeek != "Qua" && $hour == "17:00") continue;
+        if ($code < 200 || $code > 206)
+        {
+            return [
+                "code"     => $code,
+                "error"    => $error,
+                "message"  => $message,
+                "response" => ""
+            ];
+        }
 
-            $temp[$date]["hours"][] = $hour;
+        $response = json_decode( $response, true );
+
+        if (isset($response["dados"]["ret"]["TX"]))
+        {
+            $message = "Agenda indisponível";
+            return [
+                "code"     => $code,
+                "error"    => $error,
+                "message"  => $message,
+                "response" => ""
+            ];
+        }
+
+        return [
+            "code"     => $code,
+            "error"    => $error,
+            "message"  => $message,
+            "response" => $response["dados"]["ret"]
+        ];
+    }
+
+    /**
+     * Trata os horários recebidos da API
+     *
+     * @param array $schedules
+     * @return array
+     */
+    function treatValidSchedule($schedules)
+    {
+        $consultedDays = [];
+        foreach (range(0,15,1) as $i)
+        {
+            $date = date("Y-m-") . sprintf("%02d", date("d") + $i);
+            $consultedDays[$date] = [];
+        }
+
+        $temp = [];
+
+        foreach ($consultedDays as $id => $x)
+        {
+            foreach ($schedules as $sch)
+            {
+                $hour    = $sch["HORARIO"];
+
+                // Horarios de atendimento
+                if (!in_array($hour, HOURS)) continue;
+
+
+                $date    = formatDate($id);
+                $dayWeek = getDayOfWeek($id);
+                $day     = isTodayTomorrow($id, $dayWeek);
+
+                $temp[$date]["date"]    = $id;
+                $temp[$date]["day"]     = $day;
+                $temp[$date]["dayWeek"] = $dayWeek;
+
+
+                if ($id != $sch["DATA"])
+                {
+                    if (!isset($temp[$date]["hours"])) $temp[$date]["hours"] = [];
+
+                    continue;
+                }
+
+                // Na segunda, não atende pela manhã
+                if ($dayWeek == "Seg" && in_array($hour, ["09:00", "10:00", "11:00"])) continue;
+
+                // Ter/Qui/Sex todos horarios menos 17h
+                if ($dayWeek != "Seg" && $dayWeek != "Qua" && $hour == "17:00") continue;
+
+                $temp[$date]["hours"][] = $hour;
+            }
+        }
+
+        return $temp;
+    }
+
+    /**
+     * Retorna qual o dia da semana
+     *
+     * @param string $date
+     * @return string
+     */
+    function getDayOfWeek($date)
+    {
+        $day = date("l", strtotime($date));
+        switch ($day)
+        {
+            case "Sunday":
+                return "Dom";
+            break;
+            case "Monday":
+                return "Seg";
+            break;
+            case "Tuesday":
+                return "Ter";
+            break;
+            case "Wednesday":
+                return "Qua";
+            break;
+            case "Thursday":
+                return "Qui";
+            break;
+            case "Friday":
+                return "Sex";
+            break;
+            case "Saturday":
+                return "Sáb";
+            break;
         }
     }
 
-    return $temp;
-}
-
-/**
- * Retorna qual o dia da semana
- *
- * @param string $date
- * @return string
- */
-function getDayOfWeek($date)
-{
-    $day = date("l", strtotime($date));
-    switch ($day)
+    /**
+     * Transforma data e hora em um id unico
+     *
+     * @param string $date
+     * @param string $hour
+     * @return string
+     */
+    function getId($date, $hour)
     {
-        case "Sunday":
-            return "Dom";
-        break;
-        case "Monday":
-            return "Seg";
-        break;
-        case "Tuesday":
-            return "Ter";
-        break;
-        case "Wednesday":
-            return "Qua";
-        break;
-        case "Thursday":
-            return "Qui";
-        break;
-        case "Friday":
-            return "Sex";
-        break;
-        case "Saturday":
-            return "Sáb";
-        break;
+        $hour = explode(":", $hour);
+        return str_replace("/", "_", $date) . "_" . $hour[0];
     }
-}
 
-/**
- * Transforma data e hora em um id unico
- *
- * @param string $date
- * @param string $hour
- * @return string
- */
-function getId($date, $hour)
-{
-    $hour = explode(":", $hour);
-    return str_replace("/", "_", $date) . "_" . $hour[0];
-}
+    /**
+     * Verifica se a data é hoje ou amanhã
+     *
+     * @param string $date
+     * @param string $dayWeek
+     * @return string
+     */
+    function isTodayTomorrow($date, $dayWeek)
+    {
+        if ($date == date("Y-m-d"))
+            return "Hoje";
+        else if ($date == date("Y-m-d", strtotime(date("Y-m-d") . " +1 day")))
+            return "Amanhã";
+        else
+            return $dayWeek;
+    }
 
-/**
- * Verifica se a data é hoje ou amanhã
- *
- * @param string $date
- * @param string $dayWeek
- * @return string
- */
-function isTodayTomorrow($date, $dayWeek)
-{
-    if ($date == date("Y-m-d"))
-        return "Hoje";
-    else if ($date == date("Y-m-d", strtotime(date("Y-m-d") . " +1 day")))
-        return "Amanhã";
-    else
-        return $dayWeek;
-}
+    /**
+     * Formata data de MM-DD para DD/MM
+     *
+     * @param string $date
+     * @return string
+     */
+    function formatDate($date)
+    {
+        return implode("/", array_reverse(explode("-", $date)));
+    }
 
-/**
- * Formata data de MM-DD para DD/MM
- *
- * @param string $date
- * @return string
- */
-function formatDate($date)
-{
-    return implode("/", array_reverse(explode("-", $date)));
-}
-
-/**
- * Remove o ano da data
- *
- * @param string $date
- * @return string
- */
-function onlyDayMonth($date)
-{
-    $date = explode("/", $date);
-    return $date[0] . "/" . $date[1];
-}
+    /**
+     * Remove o ano da data
+     *
+     * @param string $date
+     * @return string
+     */
+    function onlyDayMonth($date)
+    {
+        $date = explode("/", $date);
+        return $date[0] . "/" . $date[1];
+    }
 
 
-$data  = getScheduleGasparini();
-$code  = $data["code"];
-$error = $data["error"];
+    $data  = getScheduleGasparini();
+    $code  = $data["code"];
+    $error = $data["error"];
 
-$schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
+    $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
 
-// print_r ("<pre>");
-// print_r ($schedules);
-// print_r ("</pre>");
-// exit();
+    // print_r ("<pre>");
+    // print_r ($schedules);
+    // print_r ("</pre>");
+    // exit();
 
 ?>
 
@@ -281,6 +281,16 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" >
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/cropped-favicon-1-32x32.png" sizes="32x32">
+    <link rel="icon" href="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/cropped-favicon-1-192x192.png" sizes="192x192">
+    <link rel="apple-touch-icon-precomposed" href="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/cropped-favicon-1-180x180.png">
+    <meta name="msapplication-TileImage" content="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/cropped-favicon-1-270x270.png">
+
+    <title>Dentista na Mooca Gasparini Odontologia Referência Implantes</title>
 
     <style>
         .fs-12 {
@@ -323,8 +333,111 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .open-sans.text-uppercase {
+            font-family: "Open Sans",sans-serif;
+        }
+        #colophon {
+            -webkit-text-size-adjust: 100%;
+            --qlwapp-scheme-font-family: Calibri;
+            --qlwapp-scheme-font-size: 18;
+            --qlwapp-scheme-brand: #2db443;
+            --qlwapp-scheme-qlwapp_scheme_form_nonce: d8df549bdb;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 1.5;
+            font-family: Arial,Helvetica,sans-serif;
+            letter-spacing: 0px;
+            text-align: left;
+            font-size: 16px;
+            box-sizing: inherit;
+        }
+        .invert {
+            background-color: #484848;
+            color: #a9a9a9;
+        }
+        .invert a,
+        .invert h6,
+        .footer-area a,
+        .footer-container a{
+            color: #FFF;
+        }
+        .invert h6 {
+            font-weight: lighter;
+        }
+
+        .footer-area.widget-area {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .footer-area {
+            color: rgba(169,169,169,.7);
+        }
+        .footer-area {
+            font-size: 14px;
+            font-size: .875rem;
+            line-height: 1.7;
+        }
+
+        @media (min-width: 768px) {
+            .widget-area .widget {
+                margin-bottom: 20px;
+            }
+        }
+
+        .widget-area .widget {
+            margin-bottom: 3em;
+        }
+        .footer-area.widget-area .widget {
+            margin: 10px 0 0;
+        }
+
+        .footer-area aside {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        #colophon a:hover {
+            color: #51c5d2;
+        }
+
+        .footer-container {
+            padding: 18px 0 !important;
+            background-color: #424242;
+        }
+        .footer-copyright {
+            font-size: 14px;
+            font-size: .875rem;
+        }
+        #toTop {
+            color: #fff;
+            background-color: #51c5d2;
+        }
+        @media (min-width: 768px) {
+            #toTop {
+                bottom: 80px;
+            }
+        }
+
+        @media (min-width: 544px) {
+            #toTop {
+                right: 20px;
+            }
+        }
+        #toTop {
+            display: none;
+            text-decoration: none;
+            position: fixed;
+            bottom: 20px;
+            /* right: -999em; */
+            overflow: hidden;
+            width: 58px;
+            height: 58px;
+            z-index: 999;
+            text-align: center;
+            border-radius: 50%;
+        }
     </style>
-    <title>Document</title>
 </head>
 <body class="bg-light" >
 
@@ -378,9 +491,13 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
                     ?>
                             <div class="row">
                                 <div class="col-12 d-flex justify-content-between mb-2">
-                                    <button class="btn btn-gasparini" type="button" data-bs-target="#gaspariiniCarousel" data-bs-slide="prev">&laquo;</button>
+                                    <button class="btn btn-gasparini" type="button" data-bs-target="#gaspariiniCarousel" data-bs-slide="prev">
+                                        <i class="bi-chevron-left"></i>
+                                    </button>
                                     <h5 class="my-2" >Horários</h5>
-                                    <button class="btn btn-gasparini" type="button" data-bs-target="#gaspariiniCarousel" data-bs-slide="next">&raquo;</button>
+                                    <button class="btn btn-gasparini" type="button" data-bs-target="#gaspariiniCarousel" data-bs-slide="next">
+                                        <i class="bi-chevron-right"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -509,6 +626,49 @@ $schedules = ($code == 200) ? treatValidSchedule($data["response"]) : "" ;
         </div>
     </div>
 
+    <footer id="colophon" class="container-fluid text-center px-0 site-footer" >
+        <div class="footer-area-wrap invert">
+            <div class="container">
+                <section id="footer-area" class="footer-area widget-area row">
+                    <aside class="col-12 mt-">
+                        <h6 class="open-sans text-uppercase mb-3">Gasparini Odontologia</h6>
+                        <div class="">
+                            <a class="text-decoration-none" href="https://gaspariniodontologia.com.br/">
+                                <img class="lazy-loaded" src="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/logo_gasparini_quality_high_cantos_arredondados.png" data-lazy-type="image" data-src="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/logo_gasparini_quality_high_cantos_arredondados.png" alt="Gasparini Odontologia | Dentista na Mooca | Clínica Odontológica">
+                                <noscript>
+                                    <img class="" src="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/logo_gasparini_quality_high_cantos_arredondados.png" alt="Gasparini Odontologia | Dentista na Mooca | Clínica Odontológica">
+                                </noscript>
+                            </a>
+                        </div>
+                        <div class="my-0 py-0">
+                            <br>
+                            <p>Dentistas na Mooca com tradição de mais de 25 anos e o mais alto padrão em tratamentos odontológicos!</p>
+                            <br>
+                            <h6 class="open-sans text-uppercase" >Clínica Odontológica <br> na Mooca</h6>
+                            <br>
+                            <a class="text-decoration-none" href="https://gaspariniodontologia.com.br/contato-dentista-na-mooca/">
+                                AV. PAES DE BARROS, 2402 <br>
+                                PARQUE DA MOOCA, SP <br>
+                                Tel.: (11) 2272-5449 <br>
+                            </a>
+                            <a class="text-decoration-none" href="http://api.whatsapp.com/send?1=pt_BR&amp;phone=5511977556501" target="_blank" rel="noopener">
+                                WhatsApp: 11 97755-6501
+                            </a>
+                        </div>
+                    </aside>
+                </section>
+            </div>
+        </div>
+        <div class="footer-container">
+            <div>
+                <div class="footer-copyright text-white">2021 <a href="https://gaspariniodontologia.com.br/" class="text-decoration-none"> ©  Gasparini Odontologia</a> | <a href="https://agenciasi.com.br/" class="text-decoration-none"> Agência SI - Inbound Marketing</a></div>
+                <nav id="footer-navigation" class="footer-menu" role="navigation"></nav>
+            </div>
+        </div>
+        <!-- <a href="#" id="toTop" class="btn text-decoration-none" style="display: inline;">
+            <i class="bi-chevron-up"></i>
+        </a> -->
+    </footer>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
