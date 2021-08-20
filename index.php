@@ -280,6 +280,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- CSS base -->
+    <!-- <link rel="stylesheet" href="https://gaspariniodontologia.com.br/wp-content/cache/autoptimize/css/autoptimize_3dc9b0de17d877e81f045a2e56d3a6dc.css"> -->
+    <link rel="stylesheet" href="https://gaspariniodontologia.com.br/agenda/index.css" >
+    <!-- Icons base -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- Bootstrap Icons -->
@@ -291,7 +297,7 @@
     <link rel="apple-touch-icon-precomposed" href="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/cropped-favicon-1-180x180.png">
     <meta name="msapplication-TileImage" content="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/cropped-favicon-1-270x270.png">
 
-    <title>Dentista na Mooca Gasparini Odontologia Referência Implantes</title>
+    <title>Agenda - Dentista na Mooca Gasparini Odontologia Referência Implantes</title>
 
     <style>
         .fs-12 {
@@ -315,6 +321,9 @@
             color: #FFF !important;
             background-color: #51C5D2 !important;
         }
+        .text-gasparini {
+            color: #51C5D2;
+        }
 
         .spin-load {
             width: 45px;
@@ -335,27 +344,10 @@
             100% { transform: rotate(360deg); }
         }
 
-        .open-sans.text-uppercase {
-            font-family: "Open Sans",sans-serif;
-        }
-        #colophon {
-            -webkit-text-size-adjust: 100%;
-            --qlwapp-scheme-font-family: Calibri;
-            --qlwapp-scheme-font-size: 18;
-            --qlwapp-scheme-brand: #2db443;
-            --qlwapp-scheme-qlwapp_scheme_form_nonce: d8df549bdb;
-            font-style: normal;
-            font-weight: 500;
-            line-height: 1.5;
-            font-family: Arial,Helvetica,sans-serif;
-            letter-spacing: 0px;
-            text-align: left;
-            font-size: 16px;
-            box-sizing: inherit;
-        }
+        /*
         .invert {
             background-color: #484848;
-            color: #a9a9a9;
+            color: #A9A9A9;
         }
         .invert a,
         .invert h6,
@@ -366,7 +358,6 @@
         .invert h6 {
             font-weight: lighter;
         }
-
         .footer-area.widget-area {
             padding-top: 20px;
             padding-bottom: 20px;
@@ -379,29 +370,67 @@
             font-size: .875rem;
             line-height: 1.7;
         }
-
         @media (min-width: 768px) {
             .widget-area .widget {
                 margin-bottom: 20px;
             }
         }
-
         .widget-area .widget {
             margin-bottom: 3em;
         }
         .footer-area.widget-area .widget {
             margin: 10px 0 0;
         }
-
         .footer-area aside {
             margin-top: 10px;
             margin-bottom: 20px;
         }
-
         #colophon a:hover {
-            color: #51c5d2;
+            color: #51C5D2;
         }
+        .top-panel.invert {
+            color: #A9A9A9;
+            background-color: #FFF;
+        }
+        .top-panel {
+            font-size: 12px;
+            font-size: .75rem;
+            box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+        }
+        .top-panel__message .info-block i {
+            font-size: 16px;
+            font-size: 1rem;
+            padding-right: 10px;
+        }
+        .top-panel__message .info-block {
+            display: inline-block;
+        }
+        .top-panel__message > * {
+            margin: 7px;
+        }
+        .top-panel__message {
+            margin-left: -7px;
+        }
+        */
 
+        .open-sans.text-uppercase {
+            font-family: "Open Sans",sans-serif;
+        }
+        #colophon {
+            -webkit-text-size-adjust: 100%;
+            --qlwapp-scheme-font-family: Calibri;
+            --qlwapp-scheme-font-size: 18;
+            --qlwapp-scheme-brand: #2DB443;
+            --qlwapp-scheme-qlwapp_scheme_form_nonce: d8df549bdb;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 1.5;
+            font-family: Arial,Helvetica,sans-serif;
+            letter-spacing: 0px;
+            text-align: left;
+            font-size: 16px;
+            box-sizing: inherit;
+        }
         .footer-container {
             padding: 18px 0 !important;
             background-color: #424242;
@@ -409,40 +438,157 @@
         .footer-copyright {
             font-size: 14px;
             font-size: .875rem;
+            color: #A9A9A9;
         }
-        #toTop {
-            color: #fff;
-            background-color: #51c5d2;
+        .footer-container a{
+            color: #FFF;
         }
-        @media (min-width: 768px) {
-            #toTop {
-                bottom: 80px;
-            }
+        .footer-container a:hover {
+            color: #51C5D2;
         }
 
-        @media (min-width: 544px) {
-            #toTop {
-                right: 20px;
-            }
-        }
-        #toTop {
-            display: none;
-            text-decoration: none;
-            position: fixed;
-            bottom: 20px;
-            /* right: -999em; */
-            overflow: hidden;
-            width: 58px;
-            height: 58px;
-            z-index: 999;
-            text-align: center;
-            border-radius: 50%;
+        .float-right {
+            float: right !important;
         }
     </style>
 </head>
 <body class="bg-light" >
 
-    <div class="container bg-white my-4">
+    <header id="masthead" class="site-header minimal" role="banner">
+        <div class="top-panel invert">
+            <div class="top-panel-container container">
+                <div class="top-panel__wrap">
+                    <div class="top-panel__message">
+                        <div class="info-block">
+                            <i class="fa fa-envelope text-gasparini"></i>Atendimento: 8:00 - 18:00 (segunda à sexta) - CROSP/CL 11414. RT-CRO 56196. - José Luiz B. Gasparini
+                        </div>
+                        <div class="info-block">
+                            <i class="fa fa-mobile-alt text-gasparini"></i>Agende sua consulta via WhatsApp:<a href="tel:#"><strong> (11) 97755-6501 </strong></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-wrapper">
+            <div class="header-container container">
+                <div class="header-container_wrap">
+                    <div class="header-container__flex">
+                        <div class="site-branding">
+                            <div class="site-logo"><a class="site-logo__link" href="https://gaspariniodontologia.com.br/" rel="home"><img src="https://gaspariniodontologia.com.br/wp-content/uploads/2019/02/dentista-mooca.jpg" alt="Gasparini Odontologia | Dentista na Mooca | Clínica Odontológica" class="site-link__img"></a></div>
+                        </div>
+                        <nav id="site-navigation" class="main-navigation stuckMenu" role="navigation" style="position: relative; top: 0px;">
+                            <button class="menu-toggle" aria-controls="main-menu" aria-expanded="false">
+                                <i class="menu-toggle__icon fa fa-bars"></i>
+                                <i class="menu-off__icon fa fa-times"></i>
+                                <span>Menu</span>
+                            </button>
+                            <div class="main-menu__wrap">
+                                <ul id="main-menu" class="menu">
+                                    <li id="menu-item-35" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-35">
+                                        <a href="https://gaspariniodontologia.com.br">Home</a>
+                                    </li>
+                                    <li id="menu-item-20" class="menu-item menu-item-type-post_type menu-item-object-page page_item page-item-4280 menu-item-20">
+                                        <a href="https://gaspariniodontologia.com.br/clinica-odontologica-mooca/">A Clínica</a>
+                                    </li>
+                                    <li id="menu-item-4669" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4669">
+                                        <span class="sub-menu-toggle"></span>
+                                        <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/">Tratamentos</a>
+                                        <ul class="sub-menu">
+                                            <li id="menu-item-4670" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4670">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/primeira-consulta-dentista-mooca/">Primeira Consulta Odontológica</a>
+                                            </li>
+                                            <li id="menu-item-4671" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4671">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/endodontia-tratamento-canal-mooca/">Endodontia</a>
+                                            </li>
+                                            <li id="menu-item-4672" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4672">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/estetica-dental-mooca/">Estética Dental</a>
+                                            </li>
+                                            <li id="menu-item-4673" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4673">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/protese-dentaria/">Prótese Dentária</a>
+                                            </li>
+                                            <li id="menu-item-4674" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4674">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/implantodontia-implantes-odontologicos/">Implantes Dentários</a>
+                                            </li>
+                                            <li id="menu-item-4675" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4675">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/manutencao-preventiva/">Manutenção preventiva</a>
+                                            </li>
+                                            <li id="menu-item-4676" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4676">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/cirurgia-odontologica-mooca/">Cirurgia Odontológica</a>
+                                            </li>
+                                            <li id="menu-item-4677" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4677">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/ortodontia/">Ortodontia</a>
+                                            </li>
+                                            <li id="menu-item-4678" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4678">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/diagnostico-digital-mooca/">Diagnóstico Digital</a>
+                                            </li>
+                                            <li id="menu-item-4679" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4679">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/dentistica-mooca/">Dentística</a>
+                                            </li>
+                                            <li id="menu-item-4680" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4680">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/odontopediatria-na-mooca/">Odontopediatria na Mooca</a>
+                                            </li>
+                                            <li id="menu-item-4687" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4687">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/periodontia-mooca/">Periodontia</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li id="menu-item-17" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-17">
+                                        <a href="https://gaspariniodontologia.com.br/dicas-para-um-sorriso-perfeito/">Dicas</a>
+                                    </li>
+                                    <li id="menu-item-24" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-24">
+                                        <a href="https://gaspariniodontologia.com.br/contato-dentista-na-mooca/">Contato</a>
+                                    </li>
+                                    <li class="super-guacamole__menu menu-item menu-item-has-children" hidden="hidden">
+                                        <span class="sub-menu-toggle"></span><a href="#">Saiba mais</a>
+                                        <ul class="sub-menu">
+                                            <li class="super-guacamole__menu__child menu-item" hidden="hidden">
+                                                <a href="https://gaspariniodontologia.com.br">Home</a>
+                                            </li>
+                                            <li class="super-guacamole__menu__child menu-item" hidden="hidden">
+                                                <a href="https://gaspariniodontologia.com.br/clinica-odontologica-mooca/">A Clínica</a>
+                                            </li>
+                                            <li class="super-guacamole__menu__child menu-item" hidden="hidden">
+                                                <a href="https://gaspariniodontologia.com.br/tratamentos-odontologicos-mooca/">Tratamentos</a>
+                                            </li>
+                                            <li class="super-guacamole__menu__child menu-item" hidden="hidden">
+                                                <a href="https://gaspariniodontologia.com.br/dicas-para-um-sorriso-perfeito/">Dicas</a>
+                                            </li>
+                                            <li class="super-guacamole__menu__child menu-item" hidden="hidden">
+                                                <a href="https://gaspariniodontologia.com.br/contato-dentista-na-mooca/">Contato</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                        <div class="pseudoStickyBlock" style="position: relative; display: block; height: 0px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="breadcrumbs">
+            <div class="container">
+                <div class="row">
+                    <div class="col breadcrumbs__title">
+                        <h1 class="page-title">Agenda</h1>
+                    </div>
+                    <div class="col breadcrumbs__items">
+                        <div class="float-right breadcrumbs__content">
+                            <div class="breadcrumbs__wrap">
+                                <div class="breadcrumbs__item"><a href="https://gaspariniodontologia.com.br/" class="breadcrumbs__item-link is-home" rel="home" title="Home">Home</a></div>
+                                <div class="breadcrumbs__item">
+                                    <div class="breadcrumbs__item-sep">|</div>
+                                </div>
+                                <div class="breadcrumbs__item"><span class="breadcrumbs__item-target">Agenda</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container bg-white mt-3 my-5">
         <form id="formGasparini" >
             <div class="row">
                 <div class="col-12 text-center">
@@ -462,7 +608,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Telefone *</label>
-                                <input type="phone" class="form-control" id="phone" name="phone" placeholder="(11) 91234-5678"   required >
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="(11) 91234-5678"   required >
                             </div>
                             <div class="col-auto mb-3">
                                 <span class="form-text">
@@ -504,7 +650,7 @@
 
                             <div id="div-schedule" class="row">
                                 <div id="gaspariiniCarousel" class="carousel slide" data-bs-interval="0" data-bs-pause="true" data-bs-wrap="true"  >
-                                    <div class="carousel-inner">
+                                    <div class="carousel-inner px-1">
                                         <div class="carousel-item active" >
                                             <div class="row">
                                             <?php
@@ -631,7 +777,7 @@
         <div class="footer-area-wrap invert">
             <div class="container">
                 <section id="footer-area" class="footer-area widget-area row">
-                    <aside class="col-12 mt-">
+                    <aside class="col-12 mt-2 mb-3">
                         <h6 class="open-sans text-uppercase mb-3">Gasparini Odontologia</h6>
                         <div class="">
                             <a class="text-decoration-none" href="https://gaspariniodontologia.com.br/">
@@ -662,7 +808,7 @@
         </div>
         <div class="footer-container">
             <div>
-                <div class="footer-copyright text-white">2021 <a href="https://gaspariniodontologia.com.br/" class="text-decoration-none"> ©  Gasparini Odontologia</a> | <a href="https://agenciasi.com.br/" class="text-decoration-none"> Agência SI - Inbound Marketing</a></div>
+                <div class="footer-copyright ">2021 <a href="https://gaspariniodontologia.com.br/" class="text-decoration-none"> ©  Gasparini Odontologia</a> | <a href="https://agenciasi.com.br/" class="text-decoration-none"> Agência SI - Inbound Marketing</a></div>
                 <nav id="footer-navigation" class="footer-menu" role="navigation"></nav>
             </div>
         </div>
