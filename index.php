@@ -592,7 +592,7 @@
         </div>
     </header>
 
-    <div class="container bg-white mt-3 my-5">
+    <div class="container bg-white mt-0 my-5">
         <form id="formGasparini" >
             <div class="row">
                 <div class="col-12 text-center">
@@ -822,8 +822,8 @@
     </footer>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"                         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"             integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         var SPMaskBehavior = function (val) {
@@ -933,6 +933,45 @@
 
         });
 
+
+
+
+        var menu = $("#site-navigation");
+        $(".menu-toggle").on("click", function (e) {
+            var toggled = menu.hasClass("toggled");
+
+            if (toggled)
+                menu.removeClass("toggled");
+            else
+                menu.addClass("toggled");
+        });
+
+        var submenu = $("#menu-item-4669");
+        $("#menu-item-4669 .sub-menu-toggle").on("click", function (e) {
+            var open = submenu.hasClass("sub-menu-open");
+            var active = $(".sub-menu-toggle", submenu).hasClass("active");
+
+            if (open && active)
+            {
+                submenu.removeClass("sub-menu-open");
+                $(".sub-menu-toggle", submenu).removeClass("active");
+            }
+            else
+            {
+                submenu.addClass("sub-menu-open");
+                $(".sub-menu-toggle", submenu).addClass("active");
+            }
+        });
+
+        $(document).mouseup( function(e) {
+            // if the target of the click isn't the container nor a descendant of the container
+            if (!menu.is(e.target) && menu.has(e.target).length === 0)
+            {
+                menu.removeClass("toggled");
+                submenu.removeClass("sub-menu-open");
+                $(".sub-menu-toggle", submenu).removeClass("active");
+            }
+        });
     </script>
 </body>
 </html>
