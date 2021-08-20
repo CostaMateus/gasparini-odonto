@@ -413,6 +413,10 @@
         }
         */
 
+        #modalEnd h5, #div-header-schedule h5 {
+            font-family: "Open Sans", sans-serif !important;
+            font-size: 21px;
+        }
         .open-sans.text-uppercase {
             font-family: "Open Sans",sans-serif;
         }
@@ -636,7 +640,7 @@
                         else
                         {
                     ?>
-                            <div class="row">
+                            <div id="div-header-schedule" class="row">
                                 <div class="col-12 d-flex justify-content-between mb-2">
                                     <button class="btn btn-gasparini" type="button" data-bs-target="#gaspariiniCarousel" data-bs-slide="prev">
                                         <i class="bi-chevron-left"></i>
@@ -745,13 +749,13 @@
 
                 </div>
 
-                <div class="col-12 mb-3 text-center">
+                <div class="col-12 mb-4 text-center">
                     <div class="col-auto mb-3">
                         <span class="form-text">
                             Agora é só confirmar e marcar sua consulta.
                         </span>
                     </div>
-                    <button id="btnSubmit" type="submit" class="btn btn-gasparini" disabled >Marcar</button>
+                    <button id="btnSubmit" type="submit" class="btn btn-gasparini btn-lg" disabled >Marcar</button>
                 </div>
             </div>
         </form>
