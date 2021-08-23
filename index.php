@@ -1,19 +1,18 @@
 <?php
 
     header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Headers: *");
+    header("Access-Control-Allow-Headers: origin, x-requested-with, content-type");
     header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 
     date_default_timezone_set("America/Sao_Paulo");
 
-    const NPREST   = 277; // 277 mateus; 1 gasparini
-    const NUNID    = 1;   // sempre 1
-    const NROPAC   = 0;   // novo paciente
-    const NTPFONE1 = 4;   // tipo celular
+    const NPREST = 277; // 277 mateus; 1 gasparini
+    const NUNID  = 1;   // sempre 1
 
     const URL   = "https://api.personal-ed.com.br";
     const CODE  = "gasparini";
-    const HOURS = [ "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00" ];
+    const HOURS = [ "08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00", "18:00" ];
+    // const HOURS = [ "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00" ];
 
     /**
      * Recupera a agenda do Dr Gasparini
@@ -603,16 +602,16 @@
                     <div class="row">
                         <div class="col-12 col-md-8 mx-auto">
                             <div class="my-3">
-                                <label for="name" class="form-label">Nome *</label>
-                                <input type="text" class="form-control"  id="name"  name="name"  placeholder="Digite seu nome"   required autofocus >
+                                <label for="name"   class="form-label">Nome *</label>
+                                <input type="text"  class="form-control" id="name"  name="name"  placeholder="Digite seu nome"   required autofocus >
                             </div>
                             <div class="mb-3">
-                                <label for="email" class="form-label">E-mail *</label>
+                                <label for="email"  class="form-label">E-mail *</label>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail" required >
                             </div>
                             <div class="mb-3">
-                                <label for="phone" class="form-label">Telefone *</label>
-                                <input type="text" class="form-control" id="phone" name="phone" placeholder="(11) 91234-5678"   required >
+                                <label for="phone"  class="form-label">Telefone *</label>
+                                <input type="text"  class="form-control" id="phone" name="phone" placeholder="(xx) xxxxx-xxxx"   required >
                             </div>
                             <div class="col-auto mb-3">
                                 <span class="form-text">
@@ -826,24 +825,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"             integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        var SPMaskBehavior = function (val) {
-            return val.replace(/\D/g, "").length === 11 ? "(00) 00000-0000" : "(00) 0000-00009";
-        }, spOptions = { onKeyPress: function(val, e, field, options) { field.mask(SPMaskBehavior.apply({}, arguments), options); } };
-        $("#phone").mask(SPMaskBehavior, spOptions);
-
-        const URL      = "<?= URL      ?>";
-        const CODE     = "<?= CODE     ?>";
-        const NPREST   =  <?= NPREST   ?>;
-        const NUNID    =  <?= NUNID    ?>;
-        const NROPAC   =  <?= NROPAC   ?>;
-        const NTPFONE1 =  <?= NTPFONE1 ?>;
-
-        $(document).ready(function() {
-            let myModal = new bootstrap.Modal(document.getElementById("modalEnd"), { keyboard: false, backdrop: "static" });
+        $(document).ready( function() {
+            var SPMaskBehavior = function (val) {
+                return val.replace(/\D/g, "").length === 11 ? "(00) 00000-0000" : "(00) 0000-00009";
+            }, spOptions = { onKeyPress: function(val, e, field, options) { field.mask(SPMaskBehavior.apply({}, arguments), options); } };
+            $("#phone").mask(SPMaskBehavior, spOptions);
 
             $("input[name=hour]").change( function() {
                 $("#btnSubmit").prop("disabled", false);
             });
+
+            let myModal = new bootstrap.Modal(document.getElementById("modalEnd"), { keyboard: false, backdrop: "static" });
 
             $("#formGasparini").on("submit", function(e) {
                 e.preventDefault();
@@ -857,7 +849,6 @@
                 const phone  = $("#phone").val();
 
                 let datetime = $("input[name=hour]:checked", "#formGasparini").val();
-
                 if (!datetime)
                 {
                     $("#error_hour").removeClass("d-none");
@@ -876,28 +867,18 @@
 
                 $.ajax({
                     type: "POST",
-                    dataType: "json",
-                    contentType: "application/json",
-                    url: `${URL}/${CODE}/RPCCreateAgenda`,
-                    data: JSON.stringify({
-                        "nprest"   : NPREST,
-                        "nunid"    : NUNID,
-                        "nropac"   : NROPAC,
-                        "ntpfone1" : NTPFONE1,
+                    url: "exec.php",
+                    data: {
                         "dt_data"  : date,
                         "shorario" : hour,
                         "snome"    : name,
                         "sfone1"   : phone,
                         "smotivo"  : email
-                    }),
+                    },
                     success: function ( data ) {
-                        if (data["dados"]["ret"]["VL"] == 0)
-                        {
-                            type  = "text-danger";
-                            title = "Algo de errado!";
-                            text  = "<h5>Ocorreu um erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
-                        }
-                        else
+                        data = JSON.parse( data );
+
+                        if (data["code"] == 200 && data["success"])
                         {
                             type  = "text-success";
                             title = "Consulta marcada!";
@@ -907,10 +888,18 @@
                                 <p class="mb-0" >A confirmação será pelo e-mail (<b>${email}</b>) ou pelo telefone (<b>${phone}</b>).</p>
                             `;
                         }
-                        console.log( "sucess", data["dados"]["ret"]["VL"] );
+                        else
+                        {
+                            console.log( JSON.parse( data ) );
+
+                            type  = "text-danger";
+                            title = "Algo de errado!";
+                            text  = "<h5>Ocorreu um erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
+                        }
                     },
                     error: function ( err ) {
-                        console.log( err );
+                        console.log( JSON.parse( err ) );
+
                         type  = "text-danger";
                         title = "Algo de errado!";
                         text  = "<h5>Ocorreu um erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
@@ -923,14 +912,12 @@
                     $("#modalEnd .modal-title").html(title);
                     $("#modalEnd .modal-body").html(text);
                 }, 2000);
-
             });
 
             $("#modalEnd button").on("click", function(e) {
                 myModal.hide();
                 window.location.reload();
             });
-
         });
 
 
