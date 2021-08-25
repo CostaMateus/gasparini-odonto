@@ -538,6 +538,9 @@
                                         </ul>
                                     </li>
                                     <li id="menu-item-17" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-17">
+                                        <a href="https://gaspariniodontologia.com.br/agenda/">Agendamento</a>
+                                    </li>
+                                    <li id="menu-item-17" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-17">
                                         <a href="https://gaspariniodontologia.com.br/dicas-para-um-sorriso-perfeito/">Dicas</a>
                                     </li>
                                     <li id="menu-item-24" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-24">
