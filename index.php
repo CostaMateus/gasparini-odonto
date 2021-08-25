@@ -6,13 +6,15 @@
 
     date_default_timezone_set("America/Sao_Paulo");
 
-    const NPREST = 277; // 277 mateus; 1 gasparini
+    // const NPREST = 277; // 277 mateus
+    // const HOURS = [ "08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00", "18:00" ];
+
+    const NPREST = 1;   // 1 gasparini
     const NUNID  = 1;   // sempre 1
 
     const URL   = "https://api.personal-ed.com.br";
     const CODE  = "gasparini";
-    const HOURS = [ "08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00", "18:00" ];
-    // const HOURS = [ "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00" ];
+    const HOURS = [ "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00" ];
 
     /**
      * Recupera a agenda do Dr Gasparini
