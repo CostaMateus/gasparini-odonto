@@ -4,8 +4,8 @@
     if ( $_SERVER["REQUEST_METHOD"] == "GET" && realpath(__FILE__) == realpath( $_SERVER["SCRIPT_FILENAME"] ) )
     {
         header( "HTTP/1.0 403 Forbidden", TRUE, 403 );
-        // die( header( "location: https://gaspariniodontologia.com.br/agenda/" ) );
-        die( header( "location: http://192.168.15.8:8000/" ) );
+        die( header( "location: https://gaspariniodontologia.com.br/agenda/" ) );
+        // die( header( "location: http://192.168.15.8:8000/" ) );
     }
 
 
@@ -73,8 +73,12 @@
         CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_HTTPHEADER     => [ "Content-type: application/json" ],
-        CURLOPT_POSTFIELDS     => json_encode( $data )
+        CURLOPT_POSTFIELDS     => json_encode( $data ),
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_SSL_VERIFYPEER => false,
     ));
+
+
 
     $response = curl_exec( $ch );
 
