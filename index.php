@@ -455,6 +455,12 @@
         .float-right {
             float: right !important;
         }
+
+        @media (max-width: 375px) {
+            #gaspariiniCarousel .btn {
+                padding: .375rem .5rem !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-light" >
