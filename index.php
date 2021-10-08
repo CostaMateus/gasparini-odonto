@@ -872,10 +872,6 @@
                 const date = `${datetime[2]}-${datetime[1]}-${datetime[0]}`;
                 const hour = `${datetime[3]}:00`;
 
-                let title  = "";
-                let text   = "";
-                let type   = "";
-
                 $.ajax({
                     type: "POST",
                     url: "exec.php",
@@ -891,38 +887,37 @@
 
                         if (data["code"] == 200 && data["success"])
                         {
-                            type  = "text-success";
-                            title = "Consulta marcada!";
-                            text  = `
-                                <h5>Muito bem!</h5>
-                                <p><b>${name.split(" ")[0]}</b>, sua consulta foi marcada para o dia <b>${datetime[0]}/${datetime[1]}/${datetime[2]}</b> às <b>${datetime[3]}h</b>.</p>
-                                <p class="mb-0" >A confirmação será pelo e-mail (<b>${email}</b>) ou pelo telefone (<b>${phone}</b>).</p>
-                            `;
+                            showMessage(
+                                "text-success",
+                                "Consulta marcada!",
+                                `
+                                    <h5>Muito bem!</h5>
+                                    <p><b>${name.split(" ")[0]}</b>, sua consulta foi marcada para o dia <b>${datetime[0]}/${datetime[1]}/${datetime[2]}</b> às <b>${datetime[3]}h</b>.</p>
+                                    <p class="mb-0" >A confirmação será pelo e-mail (<b>${email}</b>) ou pelo telefone (<b>${phone}</b>).</p>
+                                `
+                            );
                         }
                         else
                         {
                             console.log( data );
 
-                            type  = "text-danger";
-                            title = "Algo de errado!";
-                            text  = "<h5>Ocorreu um erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
+                            showMessage(
+                                "text-danger",
+                                "Algo de errado!",
+                                "<h5>Ocorreu um erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>"
+                            );
                         }
                     },
                     error: function ( err ) {
                         console.log( JSON.parse( err ) );
 
-                        type  = "text-danger";
-                        title = "Algo de errado!";
-                        text  = "<h5>Ocorreu um erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>";
+                        showMessage(
+                            "text-danger",
+                            "Algo de errado!",
+                            "<h5>Ocorreu um erro!</h5><p>Sua consulta não pode ser registrada.</p><p class='mb-0' >Atualize a página e tente novamente.</p>"
+                        );
                     }
                 });
-
-                setTimeout( function () {
-                    $("#modalEnd .modal-footer").removeClass("d-none");
-                    $("#modalEnd .modal-header h5").addClass(type);
-                    $("#modalEnd .modal-title").html(title);
-                    $("#modalEnd .modal-body").html(text);
-                }, 2000);
             });
 
             $("#modalEnd button").on("click", function(e) {
@@ -931,6 +926,12 @@
             });
         });
 
+        window.showMessage = function (type, title, text) {
+            $("#modalEnd .modal-footer").removeClass("d-none");
+            $("#modalEnd .modal-header h5").addClass(type);
+            $("#modalEnd .modal-title").html(title);
+            $("#modalEnd .modal-body").html(text);
+        }
 
 
 
