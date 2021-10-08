@@ -12,10 +12,10 @@
     const URL      = "https://api.personal-ed.com.br";
     const CODE     = "gasparini";
 
-    const NPREST   = 277; // 277 mateus; 1 gasparini
-    const NUNID    = 1;   // sempre 1
-    const NROPAC   = 0;   // novo paciente
-    const NTPFONE1 = 4;   // tipo celular
+    const NPREST   = 1; // 1 == gasparini
+    const NUNID    = 1; // sempre 1
+    const NROPAC   = 0; // novo paciente
+    const NTPFONE1 = 4; // tipo celular
 
     function treatInput( $data )
     {
@@ -34,8 +34,6 @@
         "sfone1"   => treatInput($_POST["sfone1"]),   // phone,
         "smotivo"  => treatInput($_POST["smotivo"]),  // email
     ];
-    // echo json_encode($data);
-    // exit();
 
     if (empty($data["dt_data"]) || empty($data["shorario"]) || empty($data["snome"]) || empty($data["sfone1"]) || empty($data["smotivo"]))
     {
@@ -142,7 +140,8 @@
                 "code"     => 500,
                 "error"    => true,
                 "success"  => false,
-                "message"  => "Schedule not recorded, check if schedule is available. Datetime: " . $data["dt_data"] . " " . $data["shorario"]
+                "message"  => "Schedule not recorded, check if schedule is available. Datetime: " . $data["dt_data"] . " " . $data["shorario"],
+                "full"     => $response
             ];
         }
         else
