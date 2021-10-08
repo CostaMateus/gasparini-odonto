@@ -136,7 +136,7 @@
     {
         $response = $response["dados"]["ret"];
 
-        if ( $response["VL"] == 0 )
+        if ( $response["VL"] === "0" )
         {
             $response = [
                 "code"     => 500,
