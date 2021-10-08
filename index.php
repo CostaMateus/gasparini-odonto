@@ -901,7 +901,7 @@
                         }
                         else
                         {
-                            console.log( JSON.parse( data ) );
+                            console.log( data );
 
                             type  = "text-danger";
                             title = "Algo de errado!";

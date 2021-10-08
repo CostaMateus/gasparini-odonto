@@ -139,8 +139,8 @@
         if ( $response["VL"] == 0 )
         {
             $response = [
-                "code"     => $code,
-                "error"    => false,
+                "code"     => 500,
+                "error"    => true,
                 "success"  => false,
                 "message"  => "Schedule not recorded, check if schedule is available. Datetime: " . $data["dt_data"] . " " . $data["shorario"]
             ];
@@ -157,6 +157,7 @@
 
         // SUCCESS
         echo json_encode( $response );
+        exit();
     }
     else
     {
