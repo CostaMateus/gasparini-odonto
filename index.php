@@ -867,10 +867,11 @@
                     return;
                 }
 
-                datetime   = datetime.split("_");
+                datetime    = datetime.split("_");
 
-                const date = `${datetime[2]}-${datetime[1]}-${datetime[0]}`;
-                const hour = `${datetime[3]}:00`;
+                const date  = `${datetime[2]}-${datetime[1]}-${datetime[0]}`;
+                const hour  = `${datetime[3]}:00`;
+                const hour2 = `${datetime[3]}:30`;
 
                 $.ajax({
                     type: "POST",
@@ -887,6 +888,24 @@
 
                         if (data["code"] == 200 && data["success"])
                         {
+                            $.ajax({
+                                type: "POST",
+                                url: "exec.php",
+                                data: {
+                                    "dt_data"  : date,
+                                    "shorario" : hour2,
+                                    "snome"    : name,
+                                    "sfone1"   : phone,
+                                    "smotivo"  : email
+                                },
+                                success: function ( data ) {
+                                    console.log( JSON.parse( data ) );
+                                },
+                                error: function ( err ) {
+                                    console.log( JSON.parse( err ) );
+                                }
+                            });
+
                             showMessage(
                                 "text-success",
                                 "Consulta marcada!",
